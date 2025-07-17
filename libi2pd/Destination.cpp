@@ -66,9 +66,11 @@ namespace client
 				if (it != params->end ())
 					numTags = std::stoi(it->second);
 				LogPrint (eLogInfo, "Destination: Parameters for tunnel set to: ", inQty, " inbound (", inLen, " hops), ", outQty, " outbound (", outLen, " hops), ", numTags, " tags");
+				LogPrint (eLogDebug, "Destination: Reading parameter ", I2CP_PARAM_RATCHET_INBOUND_TAGS);
 				it = params->find (I2CP_PARAM_RATCHET_INBOUND_TAGS);
 				if (it != params->end ())
 					SetNumRatchetInboundTags (std::stoi(it->second));
+				LogPrint (eLogDebug, "Destination: Reading parameter ", I2CP_PARAM_EXPLICIT_PEERS);
 				it = params->find (I2CP_PARAM_EXPLICIT_PEERS);
 				if (it != params->end ())
 				{
@@ -83,10 +85,12 @@ namespace client
 						LogPrint (eLogInfo, "Destination: Added to explicit peers list: ", b64);
 					}
 				}
+				LogPrint (eLogDebug, "Destination: Reading parameter ", I2CP_PARAM_INBOUND_NICKNAME);
 				it = params->find (I2CP_PARAM_INBOUND_NICKNAME);
 				if (it != params->end ()) m_Nickname = it->second;
 				else // try outbound
 				{
+					LogPrint (eLogDebug, "Destination: Reading parameter ", I2CP_PARAM_OUTBOUND_NICKNAME);
 					it = params->find (I2CP_PARAM_OUTBOUND_NICKNAME);
 					if (it != params->end ()) m_Nickname = it->second;
 					// otherwise we set default nickname in Start when we know local address
@@ -97,12 +101,14 @@ namespace client
 					// override isPublic
 					m_IsPublic = (it->second != "true");
 				}
+				LogPrint (eLogDebug, "Destination: Reading parameter ", I2CP_PARAM_LEASESET_TYPE);
 				it = params->find (I2CP_PARAM_LEASESET_TYPE);
 				if (it != params->end ())
 					m_LeaseSetType = std::stoi(it->second);
 				if (m_LeaseSetType == i2p::data::NETDB_STORE_TYPE_ENCRYPTED_LEASESET2)
 				{
 					// authentication for encrypted LeaseSet
+					LogPrint (eLogDebug, "Destination: Reading parameter ", I2CP_PARAM_LEASESET_AUTH_TYPE);
 					it = params->find (I2CP_PARAM_LEASESET_AUTH_TYPE);
 					if (it != params->end ())
 					{
@@ -123,6 +129,7 @@ namespace client
 						m_LeaseSetPrivKey.reset (nullptr);
 					}
 				}
+				LogPrint (eLogDebug, "Destination: Reading parameter ", I2CP_PARAM_STREAMING_PROFILE);
 				it = params->find (I2CP_PARAM_STREAMING_PROFILE);
 				if (it != params->end ())
 					isHighBandwidth = std::stoi (it->second) != STREAMING_PROFILE_INTERACTIVE;
@@ -1085,6 +1092,7 @@ namespace client
 					m_StreamingInboundSpeed = std::stoi(it->second);
 				if (it != params->end ())
 					m_StreamingMaxConcurrentStreams = std::stoi(it->second);
+				LogPrint (eLogDebug, "Destination: Reading parameter ", I2CP_PARAM_STREAMING_ANSWER_PINGS);
 				it = params->find (I2CP_PARAM_STREAMING_ANSWER_PINGS);
 				if (it != params->end ())
 					m_IsStreamingAnswerPings = std::stoi (it->second); // 1 for true
